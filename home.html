@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Tencent LVC</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-bar">
+        <div class="top-left">
+            <div class="brand">
+                <span class="brand-name">Tencent LVC</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="top-icons">
+                <i class="fas fa-cog"></i>
+                <i class="fas fa-square"></i>
+            </div>
+        </div>
+        
+        <div class="top-center">
+            <div class="tabs">
+                <div class="tab active">Home</div>
+                <div class="tab">Producer</div>
+            </div>
+            <div class="center-icons">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-search"></i>
+                <i class="fas fa-share-alt"></i>
+                <div class="status-dot green"></div>
+            </div>
+        </div>
+        
+        <div class="top-right">
+            <i class="fas fa-user-circle"></i>
+            <i class="fas fa-question-circle"></i>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- 左侧边栏 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <div class="nav-item active" data-page="home">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="nav-item" data-page="producer">
+                    <i class="fas fa-chair"></i>
+                </div>
+                <div class="nav-item" data-page="live-clipping">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <div class="nav-item" data-page="editor">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <div class="nav-item" data-page="campaign">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <div class="nav-item" data-page="organization">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="main-content home-content">
+            <!-- 欢迎区域 -->
+            <section class="welcome-section">
+                <div class="welcome-header">
+                    <h1>Welcome back, Producer</h1>
+                    <p>3 live events are currently running today</p>
+                </div>
+                <div class="quick-actions">
+                    <button class="quick-btn primary">
+                        <i class="fas fa-play"></i>
+                        Start New Live
+                    </button>
+                    <button class="quick-btn">
+                        <i class="fas fa-plus"></i>
+                        Create Campaign
+                    </button>
+                    <button class="quick-btn">
+                        <i class="fas fa-upload"></i>
+                        Upload Content
+                    </button>
+                </div>
+            </section>
+
+            <!-- 统计卡片 -->
+            <section class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>1,234,567</h3>
+                        <p>Total Views</p>
+                        <span class="stat-change positive">+12.5%</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>45,678</h3>
+                        <p>Active Viewers</p>
+                        <span class="stat-change positive">+8.2%</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>156</h3>
+                        <p>Published Videos</p>
+                        <span class="stat-change positive">+23</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-share"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>89,234</h3>
+                        <p>Social Shares</p>
+                        <span class="stat-change positive">+15.7%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 主要内容区域 -->
+            <div class="content-grid">
+                <!-- 左侧列 -->
+                <div class="content-left">
+                    <!-- Current Live Streams -->
+                    <section class="live-streams">
+                        <div class="section-header">
+                            <h2>Current Live Streams</h2>
+                            <button class="view-all-btn">View All</button>
+                        </div>
+                        <div class="stream-list">
+                            <div class="stream-item">
+                                <div class="stream-preview">
+                                    <div class="stream-thumbnail">
+                                        <div class="live-indicator">LIVE</div>
+                                        <div class="viewer-count">1,234 watching</div>
+                                    </div>
+                                </div>
+                                <div class="stream-info">
+                                    <h3>Tennis Championship - Final</h3>
+                                    <p>Andy Murray vs Jo-Wilfried Tsonga</p>
+                                    <div class="stream-meta">
+                                        <span class="duration">2:34:12</span>
+                                        <span class="quality">1080p</span>
+                                    </div>
+                                </div>
+                                <div class="stream-controls">
+                                    <button class="control-btn"><i class="fas fa-play"></i></button>
+                                    <button class="control-btn"><i class="fas fa-pause"></i></button>
+                                    <button class="control-btn"><i class="fas fa-stop"></i></button>
+                                </div>
+                            </div>
+                            
+                            <div class="stream-item">
+                                <div class="stream-preview">
+                                    <div class="stream-thumbnail">
+                                        <div class="live-indicator">LIVE</div>
+                                        <div class="viewer-count">856 watching</div>
+                                    </div>
+                                </div>
+                                <div class="stream-info">
+                                    <h3>Football League - Semi Final</h3>
+                                    <p>Manchester United vs Liverpool</p>
+                                    <div class="stream-meta">
+                                        <span class="duration">1:45:23</span>
+                                        <span class="quality">720p</span>
+                                    </div>
+                                </div>
+                                <div class="stream-controls">
+                                    <button class="control-btn"><i class="fas fa-play"></i></button>
+                                    <button class="control-btn"><i class="fas fa-pause"></i></button>
+                                    <button class="control-btn"><i class="fas fa-stop"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Recent Activity -->
+                    <section class="recent-activity">
+                        <div class="section-header">
+                            <h2>Recent Activity</h2>
+                            <button class="view-all-btn">View All</button>
+                        </div>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-video"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>New Video Published</strong> - Tennis Highlights</p>
+                                    <span class="activity-time">2 minutes ago</span>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-cut"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Live Clipping</strong> - Football Goal Moment</p>
+                                    <span class="activity-time">5 minutes ago</span>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-share"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Social Share</strong> - Twitter Post</p>
+                                    <span class="activity-time">12 minutes ago</span>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Team Collaboration</strong> - New Member Joined</p>
+                                    <span class="activity-time">1 hour ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column -->
+                <div class="content-right">
+                    <!-- Performance Monitor -->
+                    <section class="performance-monitor">
+                        <div class="section-header">
+                            <h2>System Performance</h2>
+                            <div class="status-indicators">
+                                <div class="status-indicator green">
+                                    <div class="status-dot green"></div>
+                                    <span>Normal</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="performance-metrics">
+                            <div class="metric">
+                                <div class="metric-label">CPU Usage</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 45%"></div>
+                                </div>
+                                <div class="metric-value">45%</div>
+                            </div>
+                            
+                            <div class="metric">
+                                <div class="metric-label">Memory Usage</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 67%"></div>
+                                </div>
+                                <div class="metric-value">67%</div>
+                            </div>
+                            
+                            <div class="metric">
+                                <div class="metric-label">Network Bandwidth</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 23%"></div>
+                                </div>
+                                <div class="metric-value">23%</div>
+                            </div>
+                            
+                            <div class="metric">
+                                <div class="metric-label">Storage Space</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 78%"></div>
+                                </div>
+                                <div class="metric-value">78%</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Team Status -->
+                    <section class="team-status">
+                        <div class="section-header">
+                            <h2>Team Status</h2>
+                        </div>
+                        <div class="team-list">
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="member-info">
+                                    <h4>John Smith</h4>
+                                    <p>Producer</p>
+                                </div>
+                                <div class="member-status online">
+                                    <div class="status-dot green"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="member-info">
+                                    <h4>Sarah Johnson</h4>
+                                    <p>Editor</p>
+                                </div>
+                                <div class="member-status online">
+                                    <div class="status-dot green"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="member-info">
+                                    <h4>Mike Chen</h4>
+                                    <p>Technician</p>
+                                </div>
+                                <div class="member-status away">
+                                    <div class="status-dot yellow"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="member-info">
+                                    <h4>Lisa Wang</h4>
+                                    <p>Operations</p>
+                                </div>
+                                <div class="member-status offline">
+                                    <div class="status-dot red"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Notification Center -->
+                    <section class="notifications">
+                        <div class="section-header">
+                            <h2>Notifications</h2>
+                            <button class="mark-all-read">Mark All Read</button>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item unread">
+                                <div class="notification-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p>System Maintenance Notice</p>
+                                    <span class="notification-time">10 minutes ago</span>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p>New Feature Update</p>
+                                    <span class="notification-time">2 hours ago</span>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p>Backup Completed</p>
+                                    <span class="notification-time">4 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
