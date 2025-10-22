@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor - Tencent LVC</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-bar">
+        <div class="top-left">
+            <div class="brand">
+                <span class="brand-name">Tencent LVC</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="top-icons">
+                <i class="fas fa-cog"></i>
+                <i class="fas fa-square"></i>
+            </div>
+        </div>
+        
+        <div class="top-center">
+            <div class="tabs">
+                <div class="tab">Home</div>
+                <div class="tab">Producer</div>
+                <div class="tab">Live Clipping</div>
+                <div class="tab active">Editor</div>
+            </div>
+            <div class="center-icons">
+                <i class="fas fa-save"></i>
+                <i class="fas fa-eye"></i>
+                <i class="fas fa-share-alt"></i>
+                <div class="status-dot green"></div>
+            </div>
+        </div>
+        
+        <div class="top-right">
+            <i class="fas fa-user-circle"></i>
+            <i class="fas fa-question-circle"></i>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- 左侧边栏 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <div class="nav-item" data-page="home">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="nav-item" data-page="producer">
+                    <i class="fas fa-chair"></i>
+                </div>
+                <div class="nav-item" data-page="live-clipping">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <div class="nav-item active" data-page="editor">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <div class="nav-item" data-page="campaign">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <div class="nav-item" data-page="organization">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="main-content editor-content">
+            <!-- 工具栏 -->
+            <section class="toolbar">
+                <div class="toolbar-group">
+                    <button class="toolbar-btn">
+                        <i class="fas fa-folder-open"></i>
+                        导入
+                    </button>
+                    <button class="toolbar-btn">
+                        <i class="fas fa-save"></i>
+                        保存
+                    </button>
+                    <button class="toolbar-btn">
+                        <i class="fas fa-download"></i>
+                        导出
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn">
+                        <i class="fas fa-undo"></i>
+                        撤销
+                    </button>
+                    <button class="toolbar-btn">
+                        <i class="fas fa-redo"></i>
+                        重做
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn">
+                        <i class="fas fa-cut"></i>
+                        剪切
+                    </button>
+                    <button class="toolbar-btn">
+                        <i class="fas fa-copy"></i>
+                        复制
+                    </button>
+                    <button class="toolbar-btn">
+                        <i class="fas fa-paste"></i>
+                        粘贴
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn">
+                        <i class="fas fa-text-width"></i>
+                        文本
+                    </button>
+                    <button class="toolbar-btn">
+                        <i class="fas fa-image"></i>
+                        图片
+                    </button>
+                    <button class="toolbar-btn">
+                        <i class="fas fa-music"></i>
+                        音频
+                    </button>
+                </div>
+            </section>
+
+            <!-- 编辑区域 -->
+            <div class="editor-layout">
+                <!-- 左侧面板 -->
+                <aside class="editor-sidebar">
+                    <!-- 媒体库 -->
+                    <section class="media-library">
+                        <div class="section-header">
+                            <h3>Media Library</h3>
+                            <button class="add-media-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="media-tabs">
+                            <div class="media-tab active">Video</div>
+                            <div class="media-tab">Audio</div>
+                            <div class="media-tab">Image</div>
+                            <div class="media-tab">Text</div>
+                        </div>
+                        <div class="media-list">
+                            <div class="media-item">
+                                <div class="media-thumbnail">
+                                    <div class="media-preview video"></div>
+                                    <div class="media-duration">2:34</div>
+                                </div>
+                                <div class="media-info">
+                                    <h4>Tennis Match</h4>
+                                    <p>1920x1080</p>
+                                </div>
+                            </div>
+                            
+                            <div class="media-item">
+                                <div class="media-thumbnail">
+                                    <div class="media-preview video"></div>
+                                    <div class="media-duration">1:45</div>
+                                </div>
+                                <div class="media-info">
+                                    <h4>Football Highlights</h4>
+                                    <p>1920x1080</p>
+                                </div>
+                            </div>
+                            
+                            <div class="media-item">
+                                <div class="media-thumbnail">
+                                    <div class="media-preview audio"></div>
+                                </div>
+                                <div class="media-info">
+                                    <h4>Background Music</h4>
+                                    <p>MP3 • 3:20</p>
+                                </div>
+                            </div>
+                            
+                            <div class="media-item">
+                                <div class="media-thumbnail">
+                                    <div class="media-preview image"></div>
+                                </div>
+                                <div class="media-info">
+                                    <h4>Logo</h4>
+                                    <p>PNG • 500x200</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 效果库 -->
+                    <section class="effects-library">
+                        <div class="section-header">
+                            <h3>效果</h3>
+                        </div>
+                        <div class="effects-categories">
+                            <div class="effect-category">
+                                <h4>转场</h4>
+                                <div class="effect-items">
+                                    <div class="effect-item">淡入淡出</div>
+                                    <div class="effect-item">滑动</div>
+                                    <div class="effect-item">缩放</div>
+                                    <div class="effect-item">旋转</div>
+                                </div>
+                            </div>
+                            
+                            <div class="effect-category">
+                                <h4>滤镜</h4>
+                                <div class="effect-items">
+                                    <div class="effect-item">黑白</div>
+                                    <div class="effect-item">复古</div>
+                                    <div class="effect-item">鲜艳</div>
+                                    <div class="effect-item">模糊</div>
+                                </div>
+                            </div>
+                            
+                            <div class="effect-category">
+                                <h4>动画</h4>
+                                <div class="effect-items">
+                                    <div class="effect-item">弹跳</div>
+                                    <div class="effect-item">摇摆</div>
+                                    <div class="effect-item">脉冲</div>
+                                    <div class="effect-item">旋转</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
+
+                <!-- 中央预览区域 -->
+                <main class="editor-preview">
+                    <div class="preview-container">
+                        <div class="preview-header">
+                            <div class="preview-controls">
+                                <button class="preview-btn">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="preview-btn">
+                                    <i class="fas fa-pause"></i>
+                                </button>
+                                <button class="preview-btn">
+                                    <i class="fas fa-stop"></i>
+                                </button>
+                            </div>
+                            <div class="preview-info">
+                                <span>Preview</span>
+                                <div class="zoom-controls">
+                                    <button class="zoom-btn">
+                                        <i class="fas fa-search-minus"></i>
+                                    </button>
+                                    <span class="zoom-level">100%</span>
+                                    <button class="zoom-btn">
+                                        <i class="fas fa-search-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="preview-screen">
+                            <div class="preview-content">
+                                <div class="video-layer">
+                                    <div class="video-placeholder">
+                                        <i class="fas fa-video"></i>
+                                        <p>Drag video here</p>
+                                    </div>
+                                </div>
+                                <div class="text-layer">
+                                    <div class="text-overlay">
+                                        <span>标题文本</span>
+                                    </div>
+                                </div>
+                                <div class="graphics-layer">
+                                    <div class="logo-overlay">
+                                        <div class="logo-placeholder">LOGO</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- 右侧属性面板 -->
+                <aside class="properties-panel">
+                    <div class="panel-tabs">
+                        <div class="panel-tab active">属性</div>
+                        <div class="panel-tab">效果</div>
+                        <div class="panel-tab">音频</div>
+                    </div>
+                    
+                    <div class="panel-content">
+                        <!-- 属性面板 -->
+                        <div class="properties-section">
+                            <h3>Video Properties</h3>
+                            <div class="property-group">
+                                <label>Position</label>
+                                <div class="property-inputs">
+                                    <input type="number" placeholder="X" value="0">
+                                    <input type="number" placeholder="Y" value="0">
+                                </div>
+                            </div>
+                            
+                            <div class="property-group">
+                                <label>Size</label>
+                                <div class="property-inputs">
+                                    <input type="number" placeholder="Width" value="1920">
+                                    <input type="number" placeholder="Height" value="1080">
+                                </div>
+                            </div>
+                            
+                            <div class="property-group">
+                                <label>Opacity</label>
+                                <input type="range" min="0" max="100" value="100" class="slider">
+                                <span class="slider-value">100%</span>
+                            </div>
+                            
+                            <div class="property-group">
+                                <label>Rotation</label>
+                                <input type="range" min="0" max="360" value="0" class="slider">
+                                <span class="slider-value">0°</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 文本属性 -->
+                        <div class="properties-section">
+                            <h3>Text Properties</h3>
+                            <div class="property-group">
+                                <label>Font</label>
+                                <select class="property-select">
+                                    <option>Arial</option>
+                                    <option>Helvetica</option>
+                                    <option>Times New Roman</option>
+                                    <option>Courier New</option>
+                                </select>
+                            </div>
+                            
+                            <div class="property-group">
+                                <label>Font Size</label>
+                                <input type="number" value="24" class="property-input">
+                            </div>
+                            
+                            <div class="property-group">
+                                <label>Color</label>
+                                <input type="color" value="#ffffff" class="color-picker">
+                            </div>
+                            
+                            <div class="property-group">
+                                <label>Alignment</label>
+                                <div class="alignment-buttons">
+                                    <button class="align-btn">
+                                        <i class="fas fa-align-left"></i>
+                                    </button>
+                                    <button class="align-btn">
+                                        <i class="fas fa-align-center"></i>
+                                    </button>
+                                    <button class="align-btn">
+                                        <i class="fas fa-align-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- 时间轴区域 -->
+            <section class="timeline-section">
+                <div class="timeline-header">
+                    <h2>Timeline</h2>
+                    <div class="timeline-controls">
+                        <button class="timeline-btn">
+                            <i class="fas fa-zoom-in"></i>
+                        </button>
+                        <button class="timeline-btn">
+                            <i class="fas fa-zoom-out"></i>
+                        </button>
+                        <button class="timeline-btn">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="timeline-container">
+                    <div class="timeline-ruler">
+                        <div class="ruler-mark">00:00</div>
+                        <div class="ruler-mark">00:30</div>
+                        <div class="ruler-mark">01:00</div>
+                        <div class="ruler-mark">01:30</div>
+                        <div class="ruler-mark">02:00</div>
+                        <div class="ruler-mark">02:30</div>
+                        <div class="ruler-mark">03:00</div>
+                    </div>
+                    
+                    <div class="timeline-tracks">
+                        <!-- 视频轨道 -->
+                        <div class="timeline-track video-track">
+                            <div class="track-label">
+                                <i class="fas fa-video"></i>
+                                视频
+                            </div>
+                            <div class="track-content">
+                                <div class="track-clip">
+                                    <div class="clip-thumbnail"></div>
+                                    <div class="clip-handles">
+                                        <div class="handle left"></div>
+                                        <div class="handle right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 音频轨道 -->
+                        <div class="timeline-track audio-track">
+                            <div class="track-label">
+                                <i class="fas fa-music"></i>
+                                音频
+                            </div>
+                            <div class="track-content">
+                                <div class="track-clip audio-clip">
+                                    <div class="audio-waveform"></div>
+                                    <div class="clip-handles">
+                                        <div class="handle left"></div>
+                                        <div class="handle right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 文本轨道 -->
+                        <div class="timeline-track text-track">
+                            <div class="track-label">
+                                <i class="fas fa-text-width"></i>
+                                文本
+                            </div>
+                            <div class="track-content">
+                                <div class="track-clip text-clip">
+                                    <div class="text-preview">Title Text</div>
+                                    <div class="clip-handles">
+                                        <div class="handle left"></div>
+                                        <div class="handle right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 图形轨道 -->
+                        <div class="timeline-track graphics-track">
+                            <div class="track-label">
+                                <i class="fas fa-image"></i>
+                                图形
+                            </div>
+                            <div class="track-content">
+                                <div class="track-clip graphics-clip">
+                                    <div class="graphics-preview">LOGO</div>
+                                    <div class="clip-handles">
+                                        <div class="handle left"></div>
+                                        <div class="handle right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
