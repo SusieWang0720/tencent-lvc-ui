@@ -23,10 +23,12 @@
         
         <div class="top-center">
             <div class="tabs">
-                <div class="tab">Home</div>
-                <div class="tab">Producer</div>
-                <div class="tab">Live Clipping</div>
-                <div class="tab active">Editor</div>
+                <div class="tab" data-page="home">Home</div>
+                <div class="tab" data-page="producer">Producer</div>
+                <div class="tab" data-page="live-clipping">Live Clipping</div>
+                <div class="tab active" data-page="editor">Editor</div>
+                <div class="tab" data-page="campaign">Campaign</div>
+                <div class="tab" data-page="organization">Organization</div>
             </div>
             <div class="center-icons">
                 <i class="fas fa-save"></i>
@@ -77,56 +79,56 @@
                 <div class="toolbar-group">
                     <button class="toolbar-btn">
                         <i class="fas fa-folder-open"></i>
-                        导入
+                        Import
                     </button>
                     <button class="toolbar-btn">
                         <i class="fas fa-save"></i>
-                        保存
+                        Save
                     </button>
                     <button class="toolbar-btn">
                         <i class="fas fa-download"></i>
-                        导出
+                        Export
                     </button>
                 </div>
                 
                 <div class="toolbar-group">
                     <button class="toolbar-btn">
                         <i class="fas fa-undo"></i>
-                        撤销
+                        Undo
                     </button>
                     <button class="toolbar-btn">
                         <i class="fas fa-redo"></i>
-                        重做
+                        Redo
                     </button>
                 </div>
                 
                 <div class="toolbar-group">
                     <button class="toolbar-btn">
                         <i class="fas fa-cut"></i>
-                        剪切
+                        Cut
                     </button>
                     <button class="toolbar-btn">
                         <i class="fas fa-copy"></i>
-                        复制
+                        Copy
                     </button>
                     <button class="toolbar-btn">
                         <i class="fas fa-paste"></i>
-                        粘贴
+                        Paste
                     </button>
                 </div>
                 
                 <div class="toolbar-group">
                     <button class="toolbar-btn">
                         <i class="fas fa-text-width"></i>
-                        文本
+                        Text
                     </button>
                     <button class="toolbar-btn">
                         <i class="fas fa-image"></i>
-                        图片
+                        Image
                     </button>
                     <button class="toolbar-btn">
                         <i class="fas fa-music"></i>
-                        音频
+                        Audio
                     </button>
                 </div>
             </section>
@@ -197,36 +199,36 @@
                     <!-- 效果库 -->
                     <section class="effects-library">
                         <div class="section-header">
-                            <h3>效果</h3>
+                            <h3>Effects</h3>
                         </div>
                         <div class="effects-categories">
                             <div class="effect-category">
-                                <h4>转场</h4>
+                                <h4>Transitions</h4>
                                 <div class="effect-items">
-                                    <div class="effect-item">淡入淡出</div>
-                                    <div class="effect-item">滑动</div>
-                                    <div class="effect-item">缩放</div>
-                                    <div class="effect-item">旋转</div>
+                                    <div class="effect-item">Fade</div>
+                                    <div class="effect-item">Slide</div>
+                                    <div class="effect-item">Zoom</div>
+                                    <div class="effect-item">Rotate</div>
                                 </div>
                             </div>
                             
                             <div class="effect-category">
-                                <h4>滤镜</h4>
+                                <h4>Filters</h4>
                                 <div class="effect-items">
-                                    <div class="effect-item">黑白</div>
-                                    <div class="effect-item">复古</div>
-                                    <div class="effect-item">鲜艳</div>
-                                    <div class="effect-item">模糊</div>
+                                    <div class="effect-item">Black & White</div>
+                                    <div class="effect-item">Vintage</div>
+                                    <div class="effect-item">Vivid</div>
+                                    <div class="effect-item">Blur</div>
                                 </div>
                             </div>
                             
                             <div class="effect-category">
-                                <h4>动画</h4>
+                                <h4>Animations</h4>
                                 <div class="effect-items">
-                                    <div class="effect-item">弹跳</div>
-                                    <div class="effect-item">摇摆</div>
-                                    <div class="effect-item">脉冲</div>
-                                    <div class="effect-item">旋转</div>
+                                    <div class="effect-item">Bounce</div>
+                                    <div class="effect-item">Swing</div>
+                                    <div class="effect-item">Pulse</div>
+                                    <div class="effect-item">Rotate</div>
                                 </div>
                             </div>
                         </div>
@@ -271,7 +273,7 @@
                                 </div>
                                 <div class="text-layer">
                                     <div class="text-overlay">
-                                        <span>标题文本</span>
+                                        <span>Title Text</span>
                                     </div>
                                 </div>
                                 <div class="graphics-layer">
@@ -287,9 +289,9 @@
                 <!-- 右侧属性面板 -->
                 <aside class="properties-panel">
                     <div class="panel-tabs">
-                        <div class="panel-tab active">属性</div>
-                        <div class="panel-tab">效果</div>
-                        <div class="panel-tab">音频</div>
+                        <div class="panel-tab active">Properties</div>
+                        <div class="panel-tab">Effects</div>
+                        <div class="panel-tab">Audio</div>
                     </div>
                     
                     <div class="panel-content">
@@ -400,7 +402,7 @@
                         <div class="timeline-track video-track">
                             <div class="track-label">
                                 <i class="fas fa-video"></i>
-                                视频
+                                Video
                             </div>
                             <div class="track-content">
                                 <div class="track-clip">
@@ -417,7 +419,7 @@
                         <div class="timeline-track audio-track">
                             <div class="track-label">
                                 <i class="fas fa-music"></i>
-                                音频
+                                Audio
                             </div>
                             <div class="track-content">
                                 <div class="track-clip audio-clip">
@@ -434,7 +436,7 @@
                         <div class="timeline-track text-track">
                             <div class="track-label">
                                 <i class="fas fa-text-width"></i>
-                                文本
+                                Text
                             </div>
                             <div class="track-content">
                                 <div class="track-clip text-clip">
@@ -451,7 +453,7 @@
                         <div class="timeline-track graphics-track">
                             <div class="track-label">
                                 <i class="fas fa-image"></i>
-                                图形
+                                Graphics
                             </div>
                             <div class="track-content">
                                 <div class="track-clip graphics-clip">

@@ -23,11 +23,12 @@
         
         <div class="top-center">
             <div class="tabs">
-                <div class="tab">Home</div>
-                <div class="tab">Producer</div>
-                <div class="tab">Live Clipping</div>
-                <div class="tab">Editor</div>
-                <div class="tab active">Campaign</div>
+                <div class="tab" data-page="home">Home</div>
+                <div class="tab" data-page="producer">Producer</div>
+                <div class="tab" data-page="live-clipping">Live Clipping</div>
+                <div class="tab" data-page="editor">Editor</div>
+                <div class="tab active" data-page="campaign">Campaign</div>
+                <div class="tab" data-page="organization">Organization</div>
             </div>
             <div class="center-icons">
                 <i class="fas fa-chart-line"></i>
@@ -181,12 +182,21 @@
                 <div class="campaigns-grid">
                     <!-- 活动卡片 1 -->
                     <div class="campaign-card">
-                        <div class="campaign-thumbnail">
-                            <div class="thumbnail-overlay">
-                                <div class="campaign-status live">LIVE</div>
-                                        <div class="viewer-count">1,234 watching</div>
+                        <div class="campaign-thumbnail tennis-cover">
+                            <div class="campaign-cover-content">
+                                <div class="tennis-court-preview">
+                                    <div class="court-field"></div>
+                                    <div class="tennis-players-preview">
+                                        <div class="player-preview"></div>
+                                        <div class="player-preview"></div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="thumbnail-overlay">
+                                <div class="campaign-status live">LIVE</div>
+                                <div class="viewer-count">1,234 watching</div>
+                            </div>
+                        </div>
                                 <div class="campaign-content">
                                     <div class="campaign-header">
                                         <h3>Tennis Championship - Final</h3>
@@ -236,7 +246,14 @@
 
                     <!-- 活动卡片 2 -->
                     <div class="campaign-card">
-                        <div class="campaign-thumbnail">
+                        <div class="campaign-thumbnail football-cover">
+                            <div class="campaign-cover-content">
+                                <div class="football-field-preview">
+                                    <div class="field-grass"></div>
+                                    <div class="field-lines"></div>
+                                    <div class="football-preview"></div>
+                                </div>
+                            </div>
                             <div class="thumbnail-overlay">
                                 <div class="campaign-status completed">Completed</div>
                                 <div class="viewer-count">856 watching</div>
@@ -291,7 +308,16 @@
 
                     <!-- 活动卡片 3 -->
                     <div class="campaign-card">
-                        <div class="campaign-thumbnail">
+                        <div class="campaign-thumbnail corporate-cover">
+                            <div class="campaign-cover-content">
+                                <div class="corporate-preview">
+                                    <div class="corporate-stage"></div>
+                                    <div class="corporate-elements">
+                                        <div class="corp-element"></div>
+                                        <div class="corp-element"></div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="thumbnail-overlay">
                                 <div class="campaign-status scheduled">Scheduled</div>
                                 <div class="viewer-count">0 watching</div>
@@ -330,15 +356,15 @@
                             <div class="campaign-metrics">
                                 <div class="metric">
                                     <span class="metric-value">-</span>
-                                    <span class="metric-label">观看</span>
+                                    <span class="metric-label">Views</span>
                                 </div>
                                 <div class="metric">
                                     <span class="metric-value">-</span>
-                                    <span class="metric-label">分享</span>
+                                    <span class="metric-label">Shares</span>
                                 </div>
                                 <div class="metric">
                                     <span class="metric-value">-</span>
-                                    <span class="metric-label">互动率</span>
+                                    <span class="metric-label">Engagement</span>
                                 </div>
                             </div>
                         </div>
@@ -346,10 +372,19 @@
 
                     <!-- 活动卡片 4 -->
                     <div class="campaign-card">
-                        <div class="campaign-thumbnail">
+                        <div class="campaign-thumbnail news-cover">
+                            <div class="campaign-cover-content">
+                                <div class="news-preview">
+                                    <div class="news-studio"></div>
+                                    <div class="news-elements">
+                                        <div class="news-bar"></div>
+                                        <div class="news-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="thumbnail-overlay">
                                 <div class="campaign-status paused">Paused</div>
-                                <div class="viewer-count">0 观看</div>
+                                <div class="viewer-count">0 watching</div>
                             </div>
                         </div>
                         <div class="campaign-content">
@@ -385,15 +420,15 @@
                             <div class="campaign-metrics">
                                 <div class="metric">
                                     <span class="metric-value">234K</span>
-                                    <span class="metric-label">观看</span>
+                                    <span class="metric-label">Views</span>
                                 </div>
                                 <div class="metric">
                                     <span class="metric-value">1.8K</span>
-                                    <span class="metric-label">分享</span>
+                                    <span class="metric-label">Shares</span>
                                 </div>
                                 <div class="metric">
                                     <span class="metric-value">2.1%</span>
-                                    <span class="metric-label">互动率</span>
+                                    <span class="metric-label">Engagement</span>
                                 </div>
                             </div>
                         </div>
@@ -401,7 +436,16 @@
 
                     <!-- 活动卡片 5 -->
                     <div class="campaign-card">
-                        <div class="campaign-thumbnail">
+                        <div class="campaign-thumbnail music-cover">
+                            <div class="campaign-cover-content">
+                                <div class="music-preview">
+                                    <div class="music-stage"></div>
+                                    <div class="music-elements">
+                                        <div class="music-note">♪</div>
+                                        <div class="music-note">♫</div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="thumbnail-overlay">
                                 <div class="campaign-status live">LIVE</div>
                                 <div class="viewer-count">567 watching</div>
@@ -440,15 +484,15 @@
                             <div class="campaign-metrics">
                                 <div class="metric">
                                     <span class="metric-value">567K</span>
-                                    <span class="metric-label">观看</span>
+                                    <span class="metric-label">Views</span>
                                 </div>
                                 <div class="metric">
                                     <span class="metric-value">3.4K</span>
-                                    <span class="metric-label">分享</span>
+                                    <span class="metric-label">Shares</span>
                                 </div>
                                 <div class="metric">
                                     <span class="metric-value">6.7%</span>
-                                    <span class="metric-label">互动率</span>
+                                    <span class="metric-label">Engagement</span>
                                 </div>
                             </div>
                         </div>
@@ -456,7 +500,15 @@
 
                     <!-- 活动卡片 6 -->
                     <div class="campaign-card">
-                        <div class="campaign-thumbnail">
+                        <div class="campaign-thumbnail esports-cover">
+                            <div class="campaign-cover-content">
+                                <div class="esports-preview">
+                                    <div class="esports-arena"></div>
+                                    <div class="esports-elements">
+                                        <div class="esports-logo">VS</div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="thumbnail-overlay">
                                 <div class="campaign-status completed">Completed</div>
                                 <div class="viewer-count">1.1M watching</div>
@@ -495,15 +547,15 @@
                             <div class="campaign-metrics">
                                 <div class="metric">
                                     <span class="metric-value">1.1M</span>
-                                    <span class="metric-label">观看</span>
+                                    <span class="metric-label">Views</span>
                                 </div>
                                 <div class="metric">
                                     <span class="metric-value">12.5K</span>
-                                    <span class="metric-label">分享</span>
+                                    <span class="metric-label">Shares</span>
                                 </div>
                                 <div class="metric">
                                     <span class="metric-value">8.9%</span>
-                                    <span class="metric-label">互动率</span>
+                                    <span class="metric-label">Engagement</span>
                                 </div>
                             </div>
                         </div>

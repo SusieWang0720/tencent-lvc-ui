@@ -52,11 +52,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 更新导航状态
     function updateNavigationState(activePage) {
+        // 更新左侧导航栏
         const navItems = document.querySelectorAll('.nav-item[data-page]');
         navItems.forEach(item => {
             item.classList.remove('active');
             if (item.getAttribute('data-page') === activePage) {
                 item.classList.add('active');
+            }
+        });
+        
+        // 更新顶部tabs
+        const topTabs = document.querySelectorAll('.top-center .tabs .tab[data-page]');
+        topTabs.forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.getAttribute('data-page') === activePage) {
+                tab.classList.add('active');
             }
         });
     }
@@ -304,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const layerElement = document.createElement('div');
             layerElement.className = 'layer-preview resizable';
             layerElement.dataset.assetId = asset.id;
-            layerElement.style.zIndex = activeLayers[target].length;
+            // z-index 会在 updateLayerOrder 中统一设置，确保后添加的素材在上层
             
             // 默认尺寸和位置
             layerElement.style.width = '60%';
@@ -637,8 +647,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // 更新图层顺序
         function updateLayerOrder(target) {
             // 后来者在上，所以数组末尾的元素应该有最高的 z-index
+            // 数组顺序：[第一个素材, 第二个素材, ...]
+            // 索引：     0           1           ...
+            // z-index：  0           1           ...（索引越大，z-index越大，越在上层）
             activeLayers[target].forEach((layer, index) => {
-                // 直接使用索引作为 z-index，后添加的素材（数组末尾）自然有更高的 z-index
+                // 直接使用索引作为 z-index，后添加的素材（数组末尾，索引更大）自然有更高的 z-index
                 layer.element.style.zIndex = index;
             });
         }
@@ -1010,11 +1023,17 @@ document.addEventListener('DOMContentLoaded', function() {
         let markOutTime = null;
         let clips = [];
         
-        const videoFileInput = document.getElementById('videoFileInput');
-        const videoUploadArea = document.getElementById('videoUploadArea');
-        const videoUploadSection = document.getElementById('videoUploadSection');
-        const addSourceBtn = document.getElementById('addSourceBtn');
+        // 导出面板相关元素
+        const closeExportBtn = document.getElementById('closeExportBtn');
+        const exportSearch = document.getElementById('exportSearch');
         const previewVideo = document.getElementById('previewVideo');
+        
+        // Clip Library上传相关元素
+        const uploadVideoBtn = document.getElementById('uploadVideoBtn');
+        const libraryUploadSection = document.getElementById('libraryUploadSection');
+        const libraryUploadArea = document.getElementById('libraryUploadArea');
+        const libraryVideoFileInput = document.getElementById('libraryVideoFileInput');
+        const clipsGrid = document.getElementById('clipsGrid');
         const previewContent = document.getElementById('previewContent');
         const timeDisplay = document.getElementById('timeDisplay');
         const markInBtn = document.getElementById('markInBtn');
@@ -1022,165 +1041,414 @@ document.addEventListener('DOMContentLoaded', function() {
         const saveClipBtn = document.getElementById('saveClipBtn');
         const timelineClips = document.getElementById('timelineClips');
         const playhead = document.getElementById('playhead');
+        const timelineRuler = document.getElementById('timelineRuler');
+        const timelineSelection = document.getElementById('timelineSelection');
+        const selectionLabel = document.getElementById('selectionLabel');
+        const timelineCurrentTime = document.getElementById('timelineCurrentTime');
+        const timeSlider = document.getElementById('timeSlider');
+        
+        // 时间轴配置
+        let timelineZoom = 1; // 缩放级别
+        let timelineStartTime = 0; // 时间轴起始时间（秒）
+        let timelineDuration = 600; // 默认时间轴总时长（10分钟）
+        let pixelsPerSecond = 10; // 每秒对应的像素数
+        
+        // 初始化时间轴标尺
+        function initTimelineRuler() {
+            if (!timelineRuler) return;
+            
+            timelineRuler.innerHTML = '';
+            const rulerWidth = timelineDuration * pixelsPerSecond * timelineZoom;
+            timelineRuler.style.width = rulerWidth + 'px';
+            
+            // 同步时间轴轨道宽度
+            const timelineTracks = document.querySelector('.timeline-tracks');
+            if (timelineTracks) {
+                timelineTracks.style.width = rulerWidth + 'px';
+            }
+            
+            // 根据缩放级别决定标记间隔
+            let markInterval = 60; // 默认每分钟一个标记
+            if (timelineZoom > 2) {
+                markInterval = 10; // 每10秒一个标记
+            } else if (timelineZoom > 1) {
+                markInterval = 30; // 每30秒一个标记
+            }
+            
+            // 生成时间标记
+            for (let time = timelineStartTime; time <= timelineStartTime + timelineDuration; time += markInterval) {
+                const mark = document.createElement('div');
+                mark.className = 'ruler-mark';
+                const hours = Math.floor(time / 3600);
+                const minutes = Math.floor((time % 3600) / 60);
+                const seconds = Math.floor(time % 60);
+                mark.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                const position = (time - timelineStartTime) * pixelsPerSecond * timelineZoom;
+                mark.style.left = position + 'px';
+                
+                timelineRuler.appendChild(mark);
+            }
+        }
+        
+        // 初始化时间轴
+        if (timelineRuler) {
+            initTimelineRuler();
+        } else {
+            console.warn('Timeline ruler element not found');
+        }
         
         // 显示/隐藏上传区域
+        // 初始化导出面板功能
         console.log('=== Live Clipping Page Initialization ===');
-        console.log('Add Source Button:', addSourceBtn);
-        console.log('Upload Section:', videoUploadSection);
-        console.log('Upload Section initial display:', videoUploadSection ? videoUploadSection.style.display : 'N/A');
         
-        if (!addSourceBtn) {
-            console.error('❌ Add Source button not found!');
+        // 关闭导出面板
+        if (closeExportBtn) {
+            closeExportBtn.addEventListener('click', () => {
+                const exportSidebar = document.querySelector('.export-sidebar');
+                if (exportSidebar) {
+                    exportSidebar.style.display = 'none';
+                }
+            });
         }
         
-        if (!videoUploadSection) {
-            console.error('❌ Upload section not found!');
+        // 导出搜索功能
+        if (exportSearch) {
+            exportSearch.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const platformItems = document.querySelectorAll('.platform-item');
+                platformItems.forEach(item => {
+                    const platformName = item.querySelector('.platform-name').textContent.toLowerCase();
+                    if (platformName.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
         }
         
-        if (addSourceBtn && videoUploadSection) {
-            console.log('✅ Both elements found, binding click event...');
-            
-            // 使用事件委托，确保即使点击图标也能触发
-            addSourceBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('🔘 Add Source button clicked!', e.target);
-                
-                // 简单直接的切换方式
-                const isCurrentlyHidden = videoUploadSection.style.display === 'none' || 
-                                        window.getComputedStyle(videoUploadSection).display === 'none';
-                
-                console.log('Current state - isHidden:', isCurrentlyHidden);
-                
-                if (isCurrentlyHidden) {
-                    // 显示上传区域 - 使用多种方法确保显示
-                    videoUploadSection.style.display = 'block';
-                    videoUploadSection.style.visibility = 'visible';
-                    videoUploadSection.style.opacity = '1';
-                    videoUploadSection.removeAttribute('hidden');
-                    videoUploadSection.classList.add('show');
-                    console.log('✅ Upload section should now be visible');
-                    console.log('Upload section element:', videoUploadSection);
-                    console.log('Upload section offsetHeight:', videoUploadSection.offsetHeight);
-                    console.log('Upload section offsetWidth:', videoUploadSection.offsetWidth);
+        // 平台选择功能
+        const platformCheckboxes = document.querySelectorAll('.platform-checkbox');
+        platformCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                const platformItem = e.target.closest('.platform-item');
+                if (e.target.checked) {
+                    platformItem.style.borderColor = '#ff4444';
+                    platformItem.style.backgroundColor = '#3a3f4b';
                 } else {
-                    // 隐藏上传区域
-                    videoUploadSection.style.display = 'none';
-                    videoUploadSection.classList.remove('show');
-                    console.log('❌ Upload section hidden');
+                    platformItem.style.borderColor = '#3a3f4b';
+                    platformItem.style.backgroundColor = '#2d3139';
+                }
+            });
+        });
+        
+        // 保存按钮功能
+        const exportSaveBtn = document.querySelector('.export-save-btn');
+        if (exportSaveBtn) {
+            exportSaveBtn.addEventListener('click', () => {
+                const selectedPlatforms = Array.from(platformCheckboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => {
+                        const platformItem = cb.closest('.platform-item');
+                        return platformItem.querySelector('.platform-name').textContent;
+                    });
+                
+                if (selectedPlatforms.length === 0) {
+                    alert('Please select at least one platform to export to.');
+                    return;
                 }
                 
-                // 延迟验证
-                setTimeout(() => {
-                    const finalStyle = window.getComputedStyle(videoUploadSection);
-                    console.log('=== Final State Check ===');
-                    console.log('Display:', finalStyle.display);
-                    console.log('Visibility:', finalStyle.visibility);
-                    console.log('Opacity:', finalStyle.opacity);
-                    console.log('Height:', videoUploadSection.offsetHeight);
-                    console.log('Width:', videoUploadSection.offsetWidth);
-                    console.log('Is visible:', finalStyle.display !== 'none' && videoUploadSection.offsetHeight > 0);
-                }, 50);
+                console.log('Exporting to platforms:', selectedPlatforms);
+                alert(`Exporting clip to: ${selectedPlatforms.join(', ')}`);
             });
-            
-            // 确保按钮内部图标不阻止点击
-            const icon = addSourceBtn.querySelector('i');
-            if (icon) {
-                icon.style.pointerEvents = 'none';
-                console.log('✅ Icon pointer-events set to none');
-            }
-            
-            console.log('✅ Click event bound successfully');
-        } else {
-            console.error('❌ Cannot bind click event - missing elements');
         }
         
-        // 文件上传功能 - 确保在DOM加载后绑定
-        function initVideoUpload() {
-            if (!videoUploadArea) {
-                console.error('Upload area element not found');
-                return;
-            }
+        // 初始化Clip Library上传功能
+        if (uploadVideoBtn && libraryUploadSection) {
+            uploadVideoBtn.addEventListener('click', () => {
+                const isHidden = libraryUploadSection.style.display === 'none' || 
+                                window.getComputedStyle(libraryUploadSection).display === 'none';
+                libraryUploadSection.style.display = isHidden ? 'block' : 'none';
+            });
+        }
+        
+        // 初始化Library上传区域
+        if (libraryUploadArea && libraryVideoFileInput) {
+            // 点击上传
+            libraryUploadArea.addEventListener('click', () => {
+                libraryVideoFileInput.click();
+            });
             
-            if (!videoFileInput) {
-                console.error('File input element not found');
-                return;
-            }
+            // 拖拽上传
+            libraryUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                libraryUploadArea.classList.add('dragover');
+            });
             
-            console.log('Initializing video upload functionality');
-            
-            // 点击上传区域 - 使用事件委托，确保所有子元素都能触发
-            videoUploadArea.addEventListener('click', (e) => {
-                // 阻止事件冒泡，确保点击上传区域内的任何地方都能触发
-                e.stopPropagation();
-                console.log('Upload area clicked', e.target);
-                if (videoFileInput) {
-                    videoFileInput.click();
-                    console.log('File input clicked');
+            libraryUploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                if (!libraryUploadArea.contains(e.relatedTarget)) {
+                    libraryUploadArea.classList.remove('dragover');
                 }
             });
             
-            // 也允许直接点击上传内容区域
-            const uploadContent = videoUploadArea.querySelector('.upload-content');
-            if (uploadContent) {
-                uploadContent.style.pointerEvents = 'auto';
-                uploadContent.style.cursor = 'pointer';
-            }
-            
-            // 拖拽上传 - 在整个上传区域上监听
-            videoUploadArea.addEventListener('dragover', (e) => {
+            libraryUploadArea.addEventListener('drop', (e) => {
                 e.preventDefault();
-                e.stopPropagation();
-                videoUploadArea.classList.add('dragover');
-            });
-            
-            videoUploadArea.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // 只有当真正离开上传区域时才移除样式
-                if (!videoUploadArea.contains(e.relatedTarget)) {
-                    videoUploadArea.classList.remove('dragover');
-                }
-            });
-            
-            videoUploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                videoUploadArea.classList.remove('dragover');
+                libraryUploadArea.classList.remove('dragover');
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
-                    const file = files[0];
-                    // 检查文件类型 - 使用更宽松的检查
-                    const isVideoFile = file.type.startsWith('video/') || 
-                                       /\.(mp4|mov|avi|mkv|webm|flv|wmv|m4v|3gp|ogv)$/i.test(file.name);
-                    if (isVideoFile) {
-                        handleVideoUpload(file);
-                    } else {
-                        alert('Please upload a video file (MP4, MOV, AVI, MKV, WebM, etc.)');
-                    }
+                    handleLibraryVideoUpload(files[0]);
                 }
             });
             
             // 文件选择
-            videoFileInput.addEventListener('change', (e) => {
+            libraryVideoFileInput.addEventListener('change', (e) => {
                 if (e.target.files && e.target.files.length > 0) {
-                    const file = e.target.files[0];
-                    // 检查文件类型 - 使用更宽松的检查
-                    const isVideoFile = file.type.startsWith('video/') || 
-                                       /\.(mp4|mov|avi|mkv|webm|flv|wmv|m4v|3gp|ogv)$/i.test(file.name);
-                    if (isVideoFile) {
-                        handleVideoUpload(file);
-                    } else {
-                        alert('Please select a video file (MP4, MOV, AVI, MKV, WebM, etc.)');
-                        // 清空文件输入，允许重新选择
-                        e.target.value = '';
-                    }
+                    handleLibraryVideoUpload(e.target.files[0]);
                 }
             });
         }
         
-        // 初始化上传功能
-        initVideoUpload();
+        // 处理Library视频上传
+        function handleLibraryVideoUpload(file) {
+            const isVideoFile = file.type.startsWith('video/') || 
+                               /\.(mp4|mov|avi|mkv|webm|flv|wmv|m4v|3gp|ogv)$/i.test(file.name);
+            
+            if (!isVideoFile) {
+                alert('Please upload a video file (MP4, MOV, AVI, MKV, WebM, etc.)');
+                return;
+            }
+            
+            const url = URL.createObjectURL(file);
+            addVideoToLibrary(file, url);
+            
+            // 隐藏上传区域
+            if (libraryUploadSection) {
+                libraryUploadSection.style.display = 'none';
+            }
+        }
+        
+        // 添加视频到Library
+        function addVideoToLibrary(file, url) {
+            if (!clipsGrid) return;
+            
+            // 创建视频元素获取元数据
+            const video = document.createElement('video');
+            video.src = url;
+            video.muted = true;
+            video.preload = 'metadata';
+            
+            // 创建clip card
+            const clipCard = document.createElement('div');
+            clipCard.className = 'clip-card';
+            clipCard.dataset.videoUrl = url;
+            clipCard.dataset.videoName = file.name;
+            clipCard.dataset.clipType = 'uploaded';
+            
+            const displayName = file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name;
+            
+            clipCard.innerHTML = `
+                <div class="clip-thumbnail">
+                    <div class="clip-preview">
+                        <video src="${url}" style="width: 100%; height: 100%; object-fit: cover;" muted preload="metadata"></video>
+                        <div class="play-overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="clip-duration">0:00</div>
+                </div>
+                <div class="clip-details">
+                    <h3>${displayName}</h3>
+                    <p>Uploaded • Just now</p>
+                    <div class="clip-actions">
+                        <button class="action-btn">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="action-btn delete-clip-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // 插入到网格开头
+            clipsGrid.insertBefore(clipCard, clipsGrid.firstChild);
+            
+            // 获取视频信息
+            video.addEventListener('loadedmetadata', function() {
+                const duration = video.duration;
+                const minutes = Math.floor(duration / 60);
+                const seconds = Math.floor(duration % 60);
+                const durationDisplay = clipCard.querySelector('.clip-duration');
+                if (durationDisplay) {
+                    durationDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+                
+                // 存储视频信息
+                clipCard.dataset.videoDuration = duration;
+            });
+            
+            // 添加点击事件 - 加载到预览区域
+            clipCard.addEventListener('click', (e) => {
+                // 如果点击的是按钮，不触发加载
+                if (e.target.closest('.action-btn')) {
+                    console.log('Clicked action button, not loading video');
+                    return;
+                }
+                console.log('Clip card clicked, loading video:', url, file.name);
+                e.stopPropagation();
+                loadVideoToPreview(url, file.name);
+            });
+            
+            // 确保整个卡片可点击
+            clipCard.style.cursor = 'pointer';
+            
+            // 删除按钮
+            const deleteBtn = clipCard.querySelector('.delete-clip-btn');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (confirm('Are you sure you want to delete this clip?')) {
+                        URL.revokeObjectURL(url);
+                        clipCard.remove();
+                    }
+                });
+            }
+        }
+        
+        // 加载视频到预览区域
+        function loadVideoToPreview(url, name) {
+            console.log('Loading video to preview:', url, name);
+            
+            // 确保previewContent存在
+            const previewContentEl = document.getElementById('previewContent');
+            if (!previewContentEl) {
+                console.error('previewContent element not found');
+                return;
+            }
+            
+            // 获取或创建预览视频元素
+            let videoElement = document.getElementById('previewVideo');
+            if (!videoElement) {
+                console.log('Creating new video element');
+                videoElement = document.createElement('video');
+                videoElement.id = 'previewVideo';
+                videoElement.style.width = '100%';
+                videoElement.style.height = '100%';
+                videoElement.style.objectFit = 'contain';
+                videoElement.style.display = 'block';
+                previewContentEl.appendChild(videoElement);
+            } else {
+                console.log('Using existing video element');
+            }
+            
+            // 显示视频元素
+            videoElement.style.display = 'block';
+            videoElement.style.width = '100%';
+            videoElement.style.height = '100%';
+            videoElement.style.objectFit = 'contain';
+            
+            // 设置视频源
+            videoElement.src = url;
+            videoElement.controls = false;
+            videoElement.muted = false; // 允许播放声音
+            
+            // 更新currentVideo
+            currentVideo = {
+                url: url,
+                name: name,
+                duration: 0
+            };
+            
+            // 隐藏live indicator和其他元素
+            const liveIndicator = previewContentEl.querySelector('.live-indicator');
+            if (liveIndicator) {
+                liveIndicator.style.display = 'none';
+            }
+            
+            // 加载视频
+            videoElement.load();
+            
+            // 监听视频加载
+            videoElement.addEventListener('loadedmetadata', function onLoaded() {
+                console.log('Video metadata loaded, duration:', videoElement.duration);
+                currentVideo.duration = videoElement.duration;
+                updateTimeDisplay(0);
+                
+                // 更新时间轴
+                if (typeof timelineDuration !== 'undefined' && timelineRuler) {
+                    timelineDuration = videoElement.duration;
+                    if (typeof initTimelineRuler === 'function') {
+                        initTimelineRuler();
+                    }
+                }
+                
+                // 更新播放头
+                if (typeof updatePlayhead === 'function') {
+                    updatePlayhead();
+                }
+            }, { once: true });
+            
+            // 监听视频错误
+            videoElement.addEventListener('error', function onError(e) {
+                console.error('Video load error:', e);
+                alert('Error loading video. Please try another file.');
+            }, { once: true });
+            
+            // 播放控制
+            const playBtn = document.querySelector('.preview-controls .preview-btn:first-child');
+            const pauseBtn = document.querySelector('.preview-controls .preview-btn:nth-child(2)');
+            const stopBtn = document.querySelector('.preview-controls .preview-btn:nth-child(3)');
+            
+            if (playBtn) {
+                playBtn.onclick = () => {
+                    videoElement.play().catch(e => console.error('Play error:', e));
+                };
+            }
+            if (pauseBtn) {
+                pauseBtn.onclick = () => {
+                    videoElement.pause();
+                };
+            }
+            if (stopBtn) {
+                stopBtn.onclick = () => {
+                    videoElement.pause();
+                    videoElement.currentTime = 0;
+                    updateTimeDisplay(0);
+                    if (typeof updatePlayhead === 'function') {
+                        updatePlayhead();
+                    }
+                };
+            }
+            
+            // 更新时间显示
+            videoElement.addEventListener('timeupdate', () => {
+                updateTimeDisplay(videoElement.currentTime);
+                if (typeof updatePlayhead === 'function') {
+                    updatePlayhead();
+                }
+            });
+            
+            console.log('Video loaded to preview successfully');
+        }
+        
+        // 为现有的clip cards添加点击事件
+        document.addEventListener('DOMContentLoaded', () => {
+            const existingClipCards = document.querySelectorAll('.clip-card[data-clip-type="existing"]');
+            existingClipCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.action-btn')) {
+                        return;
+                    }
+                    // 对于现有clip，可以加载示例视频或显示提示
+                    console.log('Clicked existing clip:', card.querySelector('h3').textContent);
+                });
+            });
+        });
         
         // 处理视频上传
         function handleVideoUpload(file) {
@@ -1203,8 +1471,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 name: file.name
             };
             
-            // 添加视频源到右侧列表
-            addVideoSourceToGrid(file, url);
+            // 视频已上传，可以用于剪辑
             
             if (!previewVideo) {
                 console.error('Preview video element not found');
@@ -1219,6 +1486,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentVideo.duration = previewVideo.duration;
                 updateTimeDisplay(0);
                 console.log('Video loaded, duration:', currentVideo.duration);
+                
+                // 更新时间轴配置
+                if (currentVideo.duration > 0) {
+                    timelineDuration = currentVideo.duration;
+                    initTimelineRuler();
+                }
+                
                 previewVideo.removeEventListener('loadedmetadata', onLoaded);
             }, { once: true });
             
@@ -1339,14 +1613,59 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 更新播放头位置
         function updatePlayhead() {
-            if (!currentVideo || !previewVideo || !playhead) return;
-            if (previewVideo.duration > 0) {
-                const timelineClips = document.getElementById('timelineClips');
-                if (timelineClips) {
-                    const progress = (previewVideo.currentTime / previewVideo.duration);
-                    const timelineWidth = timelineClips.scrollWidth || timelineClips.offsetWidth;
-                    const playheadPosition = progress * timelineWidth;
-                    playhead.style.left = playheadPosition + 'px';
+            const video = getCurrentPreviewVideo();
+            if (!currentVideo || !video || !playhead) return;
+            if (video.duration > 0) {
+                const currentTime = video.currentTime;
+                const position = (currentTime - timelineStartTime) * pixelsPerSecond * timelineZoom;
+                playhead.style.left = position + 'px';
+                
+                // 更新底部时间显示
+                if (timelineCurrentTime) {
+                    const hours = Math.floor(currentTime / 3600);
+                    const minutes = Math.floor((currentTime % 3600) / 60);
+                    timelineCurrentTime.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+                }
+                
+                // 更新底部滑块
+                if (timeSlider) {
+                    const progress = (currentTime / video.duration) * 100;
+                    timeSlider.value = progress;
+                    const fill = timeSlider.parentElement.querySelector('.time-slider-fill');
+                    if (fill) {
+                        fill.style.width = progress + '%';
+                    }
+                }
+            }
+        }
+        
+        // 更新选中区域显示
+        function updateTimelineSelection() {
+            if (markInTime !== null && markOutTime !== null && markOutTime > markInTime) {
+                if (timelineSelection && selectionLabel) {
+                    const startPos = (markInTime - timelineStartTime) * pixelsPerSecond * timelineZoom;
+                    const endPos = (markOutTime - timelineStartTime) * pixelsPerSecond * timelineZoom;
+                    const width = endPos - startPos;
+                    
+                    timelineSelection.style.left = startPos + 'px';
+                    timelineSelection.style.width = width + 'px';
+                    timelineSelection.style.display = 'block';
+                    
+                    // 格式化时间显示
+                    const formatTime = (seconds) => {
+                        const hours = Math.floor(seconds / 3600);
+                        const mins = Math.floor((seconds % 3600) / 60);
+                        const secs = Math.floor(seconds % 60);
+                        const ms = Math.floor((seconds % 1) * 1000);
+                        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(3, '0')}`;
+                    };
+                    
+                    const duration = markOutTime - markInTime;
+                    selectionLabel.textContent = `${formatTime(markInTime)} - ${formatTime(markOutTime)} (${duration.toFixed(1)}s)`;
+                }
+            } else {
+                if (timelineSelection) {
+                    timelineSelection.style.display = 'none';
                 }
             }
         }
@@ -1356,14 +1675,74 @@ document.addEventListener('DOMContentLoaded', function() {
             playhead.style.left = '0px';
         }
         
+        // 时间滑块控制
+        if (timeSlider) {
+            timeSlider.addEventListener('input', (e) => {
+                const video = getCurrentPreviewVideo();
+                if (video && currentVideo && currentVideo.duration > 0) {
+                    const progress = e.target.value / 100;
+                    video.currentTime = progress * currentVideo.duration;
+                    if (typeof updatePlayhead === 'function') {
+                        updatePlayhead();
+                    }
+                }
+            });
+        }
+        
+        // 缩放控制
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+        const fitTimelineBtn = document.getElementById('fitTimelineBtn');
+        
+        if (zoomInBtn) {
+            zoomInBtn.addEventListener('click', () => {
+                timelineZoom = Math.min(timelineZoom * 1.5, 10);
+                initTimelineRuler();
+                updatePlayhead();
+                updateTimelineSelection();
+            });
+        }
+        
+        if (zoomOutBtn) {
+            zoomOutBtn.addEventListener('click', () => {
+                timelineZoom = Math.max(timelineZoom / 1.5, 0.1);
+                initTimelineRuler();
+                updatePlayhead();
+                updateTimelineSelection();
+            });
+        }
+        
+        if (fitTimelineBtn) {
+            fitTimelineBtn.addEventListener('click', () => {
+                if (currentVideo && currentVideo.duration > 0) {
+                    timelineDuration = currentVideo.duration;
+                    timelineZoom = 1;
+                    initTimelineRuler();
+                    updatePlayhead();
+                    updateTimelineSelection();
+                }
+            });
+        }
+        
+        // 获取当前预览视频元素的辅助函数
+        function getCurrentPreviewVideo() {
+            return document.getElementById('previewVideo');
+        }
+        
         // Mark In 功能
         if (markInBtn) {
             markInBtn.addEventListener('click', () => {
-                if (previewVideo && previewVideo.readyState >= 2) {
-                    markInTime = previewVideo.currentTime;
+                const video = getCurrentPreviewVideo();
+                if (video && video.readyState >= 2) {
+                    markInTime = video.currentTime;
                     markInBtn.style.backgroundColor = '#ff4444';
                     markInBtn.style.color = '#ffffff';
                     console.log('Mark In:', formatTime(markInTime));
+                    if (typeof updateTimelineSelection === 'function') {
+                        updateTimelineSelection();
+                    }
+                } else {
+                    alert('Please load a video first.');
                 }
             });
         }
@@ -1371,11 +1750,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Mark Out 功能
         if (markOutBtn) {
             markOutBtn.addEventListener('click', () => {
-                if (previewVideo && previewVideo.readyState >= 2) {
-                    markOutTime = previewVideo.currentTime;
+                const video = getCurrentPreviewVideo();
+                if (video && video.readyState >= 2) {
+                    markOutTime = video.currentTime;
                     markOutBtn.style.backgroundColor = '#ff4444';
                     markOutBtn.style.color = '#ffffff';
                     console.log('Mark Out:', formatTime(markOutTime));
+                    if (typeof updateTimelineSelection === 'function') {
+                        updateTimelineSelection();
+                    }
+                } else {
+                    alert('Please load a video first.');
                 }
             });
         }
@@ -1383,10 +1768,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // 保存剪辑片段
         if (saveClipBtn) {
             saveClipBtn.addEventListener('click', () => {
-                if (markInTime !== null && markOutTime !== null && markOutTime > markInTime) {
+                if (markInTime !== null && markOutTime !== null && markOutTime > markInTime && currentVideo) {
                     const clip = {
                         id: Date.now(),
-                        name: `Clip ${clips.length + 1}`,
+                        name: currentVideo.name || `Clip ${clips.length + 1}`,
                         startTime: markInTime,
                         endTime: markOutTime,
                         duration: markOutTime - markInTime,
@@ -1394,17 +1779,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                     
                     clips.push(clip);
-                    addClipToTimeline(clip);
+                    if (typeof addClipToTimeline === 'function') {
+                        addClipToTimeline(clip);
+                    }
                     
                     // 重置标记
+                    const oldMarkIn = markInTime;
+                    const oldMarkOut = markOutTime;
                     markInTime = null;
                     markOutTime = null;
                     markInBtn.style.backgroundColor = '';
                     markInBtn.style.color = '';
                     markOutBtn.style.backgroundColor = '';
                     markOutBtn.style.color = '';
+                    if (typeof updateTimelineSelection === 'function') {
+                        updateTimelineSelection();
+                    }
+                    
+                    alert(`Clip saved! Duration: ${(oldMarkOut - oldMarkIn).toFixed(1)}s`);
                 } else {
-                    alert('Please set both Mark In and Mark Out points');
+                    alert('Please set both Mark In and Mark Out points on a loaded video.');
                 }
             });
         }
@@ -1696,12 +2090,43 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 通用功能
     function initCommonFeatures() {
-        // 标签页切换
-        const tabs = document.querySelectorAll('.tab');
-        tabs.forEach(tab => {
+        // 顶部导航标签页切换和跳转
+        const topTabs = document.querySelectorAll('.top-center .tabs .tab[data-page]');
+        topTabs.forEach(tab => {
             tab.addEventListener('click', function() {
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
+                const page = this.getAttribute('data-page');
+                if (page && pageRoutes[page]) {
+                    // 如果点击的是当前页面，只更新active状态，不跳转
+                    const currentPage = getCurrentPage();
+                    if (currentPage === page) {
+                        topTabs.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        // 跳转到对应页面
+                        navigateToPage(page);
+                    }
+                } else {
+                    // 如果没有data-page属性，只切换active状态（兼容其他tabs）
+                    const tabsContainer = this.closest('.tabs');
+                    if (tabsContainer) {
+                        const siblingTabs = tabsContainer.querySelectorAll('.tab');
+                        siblingTabs.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                }
+            });
+        });
+        
+        // 其他标签页切换（非顶部导航的tabs）
+        const otherTabs = document.querySelectorAll('.tab:not(.top-center .tabs .tab)');
+        otherTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabsContainer = this.closest('.tabs');
+                if (tabsContainer) {
+                    const siblingTabs = tabsContainer.querySelectorAll('.tab');
+                    siblingTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                }
             });
         });
         
