@@ -45,25 +45,25 @@
         <!-- 左侧边栏 -->
         <aside class="sidebar">
             <nav class="sidebar-nav">
-                <div class="nav-item" data-page="home">
+                <div class="nav-item" data-page="home" data-tooltip="Home">
                     <i class="fas fa-home"></i>
                 </div>
-                <div class="nav-item" data-page="producer">
+                <div class="nav-item" data-page="producer" data-tooltip="Producer">
                     <i class="fas fa-chair"></i>
                 </div>
-                <div class="nav-item active" data-page="live-clipping">
+                <div class="nav-item active" data-page="live-clipping" data-tooltip="Live Clipping">
                     <i class="fas fa-cut"></i>
                 </div>
-                <div class="nav-item" data-page="editor">
+                <div class="nav-item" data-page="editor" data-tooltip="Editor">
                     <i class="fas fa-edit"></i>
                 </div>
-                <div class="nav-item" data-page="campaign">
+                <div class="nav-item" data-page="campaign" data-tooltip="Campaign">
                     <i class="fas fa-folder"></i>
                 </div>
-                <div class="nav-item" data-page="organization">
+                <div class="nav-item" data-page="organization" data-tooltip="Organization">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" data-tooltip="Help">
                     <i class="fas fa-question-circle"></i>
                 </div>
             </nav>
@@ -71,74 +71,10 @@
 
         <!-- 主内容区域 -->
         <main class="main-content live-clipping-content">
-            <!-- 视频源选择 -->
-            <section class="video-sources">
-                <div class="section-header">
-                    <h2>Video Sources</h2>
-                    <div class="source-controls">
-                        <button class="btn-primary">
-                            <i class="fas fa-plus"></i>
-                            Add Source
-                        </button>
-                    </div>
-                </div>
-                <div class="sources-grid">
-                    <div class="source-item active">
-                        <div class="source-preview">
-                            <div class="source-thumbnail">
-                                <div class="source-label">CAM 1</div>
-                                <div class="source-status live">LIVE</div>
-                            </div>
-                        </div>
-                        <div class="source-info">
-                            <h3>Main Camera</h3>
-                            <p>1080p • 30fps</p>
-                        </div>
-                    </div>
-                    
-                    <div class="source-item">
-                        <div class="source-preview">
-                            <div class="source-thumbnail">
-                                <div class="source-label">CAM 2</div>
-                                <div class="source-status live">LIVE</div>
-                            </div>
-                        </div>
-                        <div class="source-info">
-                            <h3>Side Camera</h3>
-                            <p>1080p • 30fps</p>
-                        </div>
-                    </div>
-                    
-                    <div class="source-item">
-                        <div class="source-preview">
-                            <div class="source-thumbnail">
-                                <div class="source-label">CAM 3</div>
-                                <div class="source-status live">LIVE</div>
-                            </div>
-                        </div>
-                        <div class="source-info">
-                            <h3>Crowd</h3>
-                            <p>720p • 30fps</p>
-                        </div>
-                    </div>
-                    
-                    <div class="source-item">
-                        <div class="source-preview">
-                            <div class="source-thumbnail">
-                                <div class="source-label">GFX</div>
-                                <div class="source-status ready">READY</div>
-                            </div>
-                        </div>
-                        <div class="source-info">
-                            <h3>Graphics Layer</h3>
-                            <p>1920x1080</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 主预览区域 -->
-            <section class="preview-section">
+            <div class="clipping-layout">
+                <!-- 左侧主预览区域 -->
+                <div class="clipping-main">
+                    <section class="preview-section">
                 <div class="preview-container">
                     <div class="main-preview">
                         <div class="preview-header">
@@ -158,11 +94,12 @@
                                 <div class="status-dot green"></div>
                             </div>
                         </div>
-                        <div class="preview-screen">
-                            <div class="preview-content">
+                        <div class="preview-screen" id="previewScreen">
+                            <div class="preview-content" id="previewContent">
+                                <video id="previewVideo" style="width: 100%; height: 100%; object-fit: contain; display: none;" controls></video>
                                 <div class="live-indicator">LIVE</div>
-                                <div class="time-display">02:34:12</div>
-                                <div class="viewer-count">1,234 观看</div>
+                                <div class="time-display" id="timeDisplay">00:00:00</div>
+                                <div class="viewer-count">1,234 viewers</div>
                             </div>
                         </div>
                     </div>
@@ -184,15 +121,15 @@
                         </div>
                         
                         <div class="clip-controls">
-                            <button class="clip-btn">
+                            <button class="clip-btn" id="markInBtn">
                                 <i class="fas fa-cut"></i>
                                 Mark In
                             </button>
-                            <button class="clip-btn">
+                            <button class="clip-btn" id="markOutBtn">
                                 <i class="fas fa-cut"></i>
                                 Mark Out
                             </button>
-                            <button class="clip-btn primary">
+                            <button class="clip-btn primary" id="saveClipBtn">
                                 <i class="fas fa-save"></i>
                                 Save Clip
                             </button>
@@ -243,36 +180,10 @@
                             <div class="ruler-mark">03:00</div>
                         </div>
                         
-                        <div class="timeline-clips">
-                            <div class="clip-item">
-                                <div class="clip-thumbnail">
-                                    <div class="clip-preview"></div>
-                                </div>
-                                <div class="clip-info">
-                                    <span class="clip-title">Brilliant Goal</span>
-                                    <span class="clip-duration">0:15</span>
-                                </div>
-                            </div>
-                            
-                            <div class="clip-item">
-                                <div class="clip-thumbnail">
-                                    <div class="clip-preview"></div>
-                                </div>
-                                <div class="clip-info">
-                                    <span class="clip-title">Player Celebration</span>
-                                    <span class="clip-duration">0:08</span>
-                                </div>
-                            </div>
-                            
-                            <div class="clip-item">
-                                <div class="clip-thumbnail">
-                                    <div class="clip-preview"></div>
-                                </div>
-                                <div class="clip-info">
-                                    <span class="clip-title">Slow-motion Replay</span>
-                                    <span class="clip-duration">0:12</span>
-                                </div>
-                            </div>
+                        <div class="timeline-clips" id="timelineClips">
+                            <!-- 时间轴播放头 -->
+                            <div class="playhead" id="playhead"></div>
+                            <!-- 剪辑片段将动态添加到这里 -->
                         </div>
                     </div>
                 </div>
@@ -399,6 +310,125 @@
                     </div>
                 </div>
             </section>
+                </div>
+                
+                <!-- 右侧视频源区域 -->
+                <aside class="video-sources-sidebar">
+                    <section class="video-sources">
+                        <div class="section-header">
+                            <h2>Video Sources</h2>
+                            <div class="source-controls">
+                                <button class="btn-primary" id="addSourceBtn">
+                                    <i class="fas fa-plus"></i>
+                                    Add Source
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 文件上传区域 -->
+                        <div class="upload-section" id="videoUploadSection" style="display: none;">
+                            <div class="upload-area" id="videoUploadArea">
+                                <input type="file" id="videoFileInput" accept="video/*" style="display: none;">
+                                <div class="upload-content">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Drag video file here or click to upload</p>
+                                    <span class="upload-hint">Supports MP4, MOV, AVI formats</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="sources-grid">
+                            <div class="source-item active">
+                                <div class="source-preview">
+                                    <div class="source-thumbnail cam-preview cam-1">
+                                        <div class="cam-preview-content">
+                                            <div class="cam-scene">
+                                                <div class="cam-field"></div>
+                                                <div class="cam-players">
+                                                    <div class="cam-player"></div>
+                                                    <div class="cam-player"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="source-label">CAM 1</div>
+                                        <div class="source-status live">LIVE</div>
+                                    </div>
+                                </div>
+                                <div class="source-info">
+                                    <h3>Main Camera</h3>
+                                    <p>1080p • 30fps</p>
+                                </div>
+                            </div>
+                            
+                            <div class="source-item">
+                                <div class="source-preview">
+                                    <div class="source-thumbnail cam-preview cam-2">
+                                        <div class="cam-preview-content">
+                                            <div class="cam-scene">
+                                                <div class="cam-field"></div>
+                                                <div class="cam-players">
+                                                    <div class="cam-player"></div>
+                                                    <div class="cam-player"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="source-label">CAM 2</div>
+                                        <div class="source-status live">LIVE</div>
+                                    </div>
+                                </div>
+                                <div class="source-info">
+                                    <h3>Side Camera</h3>
+                                    <p>1080p • 30fps</p>
+                                </div>
+                            </div>
+                            
+                            <div class="source-item">
+                                <div class="source-preview">
+                                    <div class="source-thumbnail cam-preview cam-3">
+                                        <div class="cam-preview-content">
+                                            <div class="cam-scene crowd-scene">
+                                                <div class="crowd-rows">
+                                                    <div class="crowd-row"></div>
+                                                    <div class="crowd-row"></div>
+                                                    <div class="crowd-row"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="source-label">CAM 3</div>
+                                        <div class="source-status live">LIVE</div>
+                                    </div>
+                                </div>
+                                <div class="source-info">
+                                    <h3>Crowd</h3>
+                                    <p>720p • 30fps</p>
+                                </div>
+                            </div>
+                            
+                            <div class="source-item">
+                                <div class="source-preview">
+                                    <div class="source-thumbnail cam-preview gfx-preview">
+                                        <div class="cam-preview-content">
+                                            <div class="gfx-content">
+                                                <div class="gfx-logo">THE BREAK TENS</div>
+                                                <div class="gfx-elements">
+                                                    <div class="gfx-element"></div>
+                                                    <div class="gfx-element"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="source-label">GFX</div>
+                                        <div class="source-status ready">READY</div>
+                                    </div>
+                                </div>
+                                <div class="source-info">
+                                    <h3>Graphics Layer</h3>
+                                    <p>1920x1080</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
+            </div>
         </main>
     </div>
 

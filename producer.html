@@ -44,25 +44,25 @@
         <!-- 左侧边栏 -->
         <aside class="sidebar">
             <nav class="sidebar-nav">
-                <div class="nav-item" data-page="home">
+                <div class="nav-item" data-page="home" data-tooltip="Home">
                     <i class="fas fa-home"></i>
                 </div>
-                <div class="nav-item active" data-page="producer">
+                <div class="nav-item active" data-page="producer" data-tooltip="Producer">
                     <i class="fas fa-chair"></i>
                 </div>
-                <div class="nav-item" data-page="live-clipping">
+                <div class="nav-item" data-page="live-clipping" data-tooltip="Live Clipping">
                     <i class="fas fa-cut"></i>
                 </div>
-                <div class="nav-item" data-page="editor">
+                <div class="nav-item" data-page="editor" data-tooltip="Editor">
                     <i class="fas fa-edit"></i>
                 </div>
-                <div class="nav-item" data-page="campaign">
+                <div class="nav-item" data-page="campaign" data-tooltip="Campaign">
                     <i class="fas fa-folder"></i>
                 </div>
-                <div class="nav-item" data-page="organization">
+                <div class="nav-item" data-page="organization" data-tooltip="Organization">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" data-tooltip="Help">
                     <i class="fas fa-question-circle"></i>
                 </div>
             </nav>
@@ -85,7 +85,7 @@
                                 <div class="status-dot green"></div>
                             </div>
                         </div>
-                        <div class="monitor-screen">
+                        <div class="monitor-screen" id="previewScreen">
                             <div class="audio-meter">
                                 <div class="meter-bar"></div>
                                 <div class="meter-bar"></div>
@@ -93,6 +93,7 @@
                                 <div class="meter-bar"></div>
                                 <div class="meter-bar"></div>
                             </div>
+                            <div class="layers-container" id="previewLayers"></div>
                         </div>
                     </div>
 
@@ -108,7 +109,7 @@
                                 <div class="status-dot red"></div>
                             </div>
                         </div>
-                        <div class="monitor-screen">
+                        <div class="monitor-screen" id="programScreen">
                             <div class="audio-meter">
                                 <div class="meter-bar"></div>
                                 <div class="meter-bar"></div>
@@ -116,6 +117,7 @@
                                 <div class="meter-bar"></div>
                                 <div class="meter-bar"></div>
                             </div>
+                            <div class="layers-container" id="programLayers"></div>
                         </div>
                     </div>
                 </div>
@@ -300,14 +302,29 @@
                 </div>
             </div>
             
+            <!-- 文件上传区域 -->
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="fileInput" multiple accept="video/*,image/*,audio/*" style="display: none;">
+                    <div class="upload-content">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag files here or click to upload</p>
+                        <span class="upload-hint">Supports video, image, and audio files</span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="search-section">
                 <input type="text" placeholder="Type to search..." class="search-input">
                 <select class="type-filter">
-                    <option>Type</option>
+                    <option>All Types</option>
+                    <option>Video</option>
+                    <option>Image</option>
+                    <option>Audio</option>
                 </select>
             </div>
             
-            <div class="assets-grid">
+            <div class="assets-grid" id="assetsGrid">
                 <div class="library-asset">
                     <div class="asset-preview">
                         <div class="tennis-players">
